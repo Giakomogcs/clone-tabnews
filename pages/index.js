@@ -3,7 +3,3 @@ function Home() {
 }
 
 export default Home;
-
-function gigi() {
-  gigilinfo();
-}
