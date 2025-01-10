@@ -1,1 +1,6 @@
-npx commitlint --edit $1
+# Agora verifica se há informações sensíveis
+node .husky/check-sensitive-data.js
+
+# Primeiro, verifica a mensagem do commit
+npx commitlint --edit "$1"
+
