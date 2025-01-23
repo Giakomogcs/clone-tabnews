@@ -4,7 +4,7 @@ const fs = require("fs");
 try {
   // Obtém a lista de arquivos staged
   const stagedFiles = execSync(
-    'git diff --cached --name-only -- "*.js" "*.ts" "*.json" "*.env" | grep -v ".env.example"',
+    'git diff --cached --name-only -- "*.js" "*.ts" "*.json" "*.env" | grep -v ".env.example" || true',
     { encoding: "utf-8" },
   )
     .split("\n")
@@ -32,26 +32,13 @@ try {
     /fetch\(.*\b(token|password|secret|key)\b.*\)/i, // Captura fetch com dados sensíveis (melhorado)
   ];
 
-  // Regras específicas para o arquivo de teste
-  const testFilePatterns = [
-    /\bAPI_KEY\s*=\s*['"]?.+['"]?/, // Captura API_KEY
-    /console\.log\(.*(password|key|api)/i, // Captura console.log sensíveis
-    /fetch\(.*\b(token|password|secret|key)\b.*\)/i, // Captura fetch com informações sensíveis (melhorado)
-  ];
-
   // Verifica cada arquivo staged
   stagedFiles.forEach((file) => {
     const fileContent = fs.readFileSync(file, "utf-8");
     const lines = fileContent.split("\n"); // Divide o conteúdo do arquivo em linhas
 
     lines.forEach((line, index) => {
-      const patterns = file.includes(
-        "tests/integration/api/v1/migrations/get.test.js",
-      )
-        ? testFilePatterns // Use padrões específicos para o arquivo de teste
-        : sensitivePatterns; // Use padrões gerais para os outros arquivos
-
-      patterns.forEach((pattern) => {
+      sensitivePatterns.forEach((pattern) => {
         if (pattern.test(line)) {
           sensitiveDataFound = true;
           console.error(`❌ Dados sensíveis detectados no arquivo: ${file}`);
