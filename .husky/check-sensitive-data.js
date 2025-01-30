@@ -29,7 +29,7 @@ try {
     /Authorization:\s*['"]?Bearer\s+\w+/i, // Captura Authorization com Bearer Token
     /https?:\/\/.*[?&](api_key|token)=/, // Captura URLs com API_KEY ou token na query string
     /console\.log\(.*(password|secret|token|key|api)/i, // Captura console.log sensíveis
-    /fetch\(.*\b(token|password|secret|key)\b.*\)/i, // Captura fetch com dados sensíveis (melhorado)
+    /fetch\(["'`]\s*(token|password|secret|key)\s*["'`]\)/i, // Captura fetch com dados sensíveis (melhorado)
   ];
 
   // Verifica cada arquivo staged
