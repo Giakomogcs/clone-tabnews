@@ -4,7 +4,7 @@ const fs = require("fs");
 try {
   // Obtém a lista de arquivos staged
   const stagedFiles = execSync(
-    'git diff --cached --name-only -- "*.js" "*.ts" "*.json" "*.env" | grep -v ".env.example" || true',
+    'git diff --cached --name-only --diff-filter=AM -- "*.js" "*.ts" "*.json" "*.env" | grep -v ".env.example" || true',
     { encoding: "utf-8" },
   )
     .split("\n")
@@ -34,6 +34,14 @@ try {
 
   // Verifica cada arquivo staged
   stagedFiles.forEach((file) => {
+    // Verifica se o arquivo existe, se não, ignora a verificação para esse arquivo
+    if (!fs.existsSync(file)) {
+      console.warn(
+        `⚠️ O arquivo ${file} não foi encontrado (possivelmente deletado). Pulando verificação.`,
+      );
+      return; // Pula para o próximo arquivo
+    }
+
     const fileContent = fs.readFileSync(file, "utf-8");
     const lines = fileContent.split("\n"); // Divide o conteúdo do arquivo em linhas
 
