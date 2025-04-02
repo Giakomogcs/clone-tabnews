@@ -1,6 +1,3 @@
-const { unique } = require("next/dist/build/utils");
-const { password } = require("pg/lib/defaults");
-
 exports.up = (pgm) => {
   pgm.createTable("users", {
     id: {
